@@ -1,0 +1,18 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<!-- Resource dictionary entries should be defined here. -->
+
+    <SolidColorBrush x:Key="BackgroundApp">#feedd5</SolidColorBrush>
+    <SolidColorBrush x:Key="BackgroundTitle">#DDDDDD</SolidColorBrush>
+    <SolidColorBrush x:Key="TextForeground">#3b9c9e</SolidColorBrush>
+    <SolidColorBrush x:Key="TextForeground2">#feedd5</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonBackground">#2d4771</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonBackground2">#0c2337</SolidColorBrush>
+    <SolidColorBrush x:Key="TransparentBackground">Transparent</SolidColorBrush>
+    <SolidColorBrush x:Key="NavMenuBackground">#0c2337</SolidColorBrush>
+    <SolidColorBrush x:Key="NavMenuHoverBackground">#2c4770</SolidColorBrush>
+    <SolidColorBrush x:Key="ForegroundHyperlink">#0d8efa</SolidColorBrush>
+    <SolidColorBrush x:Key="DisableColorBrush">#8C8C8C</SolidColorBrush>
+    
+</ResourceDictionary>

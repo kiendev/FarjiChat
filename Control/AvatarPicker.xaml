@@ -1,0 +1,256 @@
+﻿<UserControl x:Class="ChatRooms.Control.AvatarPicker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerikPrimitives="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Primitives"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:converter="clr-namespace:ChatRooms.Converter"
+    xmlns:controls="clr-namespace:ImageTools.Controls;assembly=ImageTools.Controls"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignWidth="480"
+             DataContext="{Binding Avatar, Source={StaticResource Locator}}">
+
+    <UserControl.Resources>
+        <Storyboard x:Name="AnimationHide">
+            <DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="LayoutRoot" d:IsOptimized="True"/>
+        </Storyboard>
+        <Storyboard x:Name="AnimationShow">
+            <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="LayoutRoot" d:IsOptimized="True"/>
+        </Storyboard>
+
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <controls:ImageConverter x:Key="ImageConverter" />
+        <converter:NotBoolToVisibilityConverter x:Key="NotBoolToVisibilityConverter" />
+        <converter:ExtensitionToVisibilityConverter x:Key="ExtensitionToVisibilityConverter" />
+        <converter:SampleJetImageLoaderConverter x:Key="SampleJetImageLoaderConverter"/>
+    </UserControl.Resources>
+
+    <Grid Opacity="1">
+        <Grid Background="Black" Opacity="0.7" Tap="UIElement_OnTap"></Grid>
+
+        <telerikPrimitives:RadBusyIndicator AnimationStyle="AnimationStyle4"
+                                                    IsRunning="True"
+                                                    Grid.Row="0"
+                                                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                    Canvas.ZIndex="100"/>
+
+        <ScrollViewer x:Name="LayoutRoot" 
+                    Background="{StaticResource BackgroundApp}"
+                    Margin="20,0"
+                    Height="700">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+
+                <phone:LongListSelector x:Name="ListGroupSticker"
+                                        ItemsSource="{Binding ListGroup}"
+                                        Width="440"
+                                        Grid.Row="0"
+                                        Margin="0,10,-12,0"
+                                        Visibility="{Binding IsStickerItem, Converter={StaticResource NotBoolToVisibilityConverter}}">
+                    <phone:LongListSelector.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Background="White" 
+                                  Height="100" Tap="GroupAvatarOnTap"
+                                  Tag="{Binding grurl}"
+                                  Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <controls:AnimatedImage x:Name="Image" 
+                                                        Source="{Binding Path=grimg, Converter={StaticResource ImageConverter}}"
+                                                        Width="100"
+                                                         Stretch="Uniform"
+                                                        LoadingFailed="Image_OnLoadingFailed"
+                                                        Margin="10,0,0,0"
+                                                        AnimationMode="Repeat"
+                                                        VerticalAlignment="Center"/>
+
+                                    <Image Width="100"
+                                               Grid.Column="0"
+                                               Stretch="Uniform"
+                                            Unloaded="ImgUnloaded"
+                                               Margin="10,0,0,0"
+                                           Visibility="{Binding grimg, Converter={StaticResource ExtensitionToVisibilityConverter}}"
+                                               VerticalAlignment="Center">
+                                        <Image.Source>
+                                            <BitmapImage DecodePixelWidth="100" 
+                                                             DecodePixelHeight="100" DecodePixelType="Logical"
+                                                             UriSource="{Binding grimg}" CreateOptions="BackgroundCreation">
+                                            </BitmapImage>
+                                        </Image.Source>
+                                    </Image>
+
+                                    <TextBlock Grid.Column="1"
+                               Text="{Binding grname}"
+                               Foreground="Black"
+                               FontFamily="{StaticResource PhoneFontFamilyBold}"
+                               FontSize="28"
+                               Margin="30,0,0,0"
+                               VerticalAlignment="Center"></TextBlock>
+
+                                <Image Source="/Assets/next.png"
+                           Width="35"
+                           Grid.Column="2"
+                           Stretch="Uniform"
+                                       Margin="0,0,10,0"
+                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </phone:LongListSelector.ItemTemplate>
+                </phone:LongListSelector>
+
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Content="Back"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource ButtonNoMargin}"
+                            Foreground="{StaticResource TextForeground2}"
+                    Background="{StaticResource ButtonBackground}"
+                            Click="ButtonBase_OnClick"
+                            Height="80"
+                            Visibility="{Binding IsStickerItem, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Width="200"></Button>
+
+                    <phone:LongListSelector x:Name="ListStickerSelector"
+                                        Width="440"
+                                            Height="560"
+                                        Grid.Row="1"
+                                            ItemRealized="ListStickers_OnItemRealized"
+                                        Margin="0,10,-12,0"
+                                        ItemsSource="{Binding ListSticker}"
+                                        Visibility="{Binding IsStickerItem, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Background="White" 
+                                  Height="100"
+                                  Tag="{Binding code}"
+                                  Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                        <controls:AnimatedImage x:Name="Image" 
+                                                        Source="{Binding Path=url, Converter={StaticResource ImageConverter}}"
+                                                        Width="100"
+                                                         Stretch="Uniform"
+                                                                Tap="StickerGifTap"
+                                                                    Tag="{Binding code}"
+                                                        LoadingFailed="Image_OnLoadingFailed"
+                                                                LostFocus="Image_OnLostFocus"
+                                                        Margin="10,0,0,0"
+                                                        AnimationMode="Repeat"
+                                                        VerticalAlignment="Center"/>
+
+                                        <Image Width="100"
+                                               Grid.Column="0"
+                                               Tag="{Binding code}"
+                                               Tap="StickerTap"
+                                               Stretch="Uniform"
+                                               Unloaded="ImgUnloaded"
+                                               LostFocus="UIElement_OnLostFocus"
+                                               Margin="10,0,0,0"
+                                               Source="{Binding url, Converter={StaticResource SampleJetImageLoaderConverter}}"
+                                               Visibility="{Binding url, Converter={StaticResource ExtensitionToVisibilityConverter}}"
+                                               VerticalAlignment="Center">
+                                        </Image>
+
+                                    <TextBox Grid.Column="1"
+                                         Text="{Binding code}"
+                                         Foreground="Black"
+                                         FontFamily="{StaticResource PhoneFontFamilyBold}"
+                                         FontSize="28"
+                                         Margin="30,0,10,0"
+                                         BorderBrush="{StaticResource PhoneAccentBrush}"
+                                         BorderThickness="1"
+                                         VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+
+                </Grid>
+
+                </Grid>
+
+                <Grid Grid.Row="1"
+                      Margin="15,0"
+                      Visibility="{Binding IsStickerItem, Converter={StaticResource NotBoolToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="Request Avatar"
+                               FontSize="30"
+                               FontWeight="Bold"
+                               Foreground="Black"></TextBlock>
+
+                    <TextBlock Text="You can request to have your own avatar image in Avatar/Stickers category, you just have to send a mail with the image you require and code for it. You avatar will be added within 7 working day."
+                               Margin="0,10"
+                               Grid.Row="1"
+                               Foreground="Black"
+                               TextWrapping="Wrap"></TextBlock>
+                    
+                    <HyperlinkButton Grid.Row="2"
+                                     Content="mail us"
+                                     Foreground="{StaticResource ForegroundHyperlink}"
+                                     HorizontalAlignment="Left"
+                                     Click="MailUsOnClick"
+                                     Margin="-10,0,0,0"></HyperlinkButton>
+
+                    <Grid Background="White"
+                          Grid.Row="3"
+                          Height="100"
+                          Tap="FlagTap"
+                          Margin="0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="/Assets/flag.png"
+                                       Width="100"
+                                       Stretch="Uniform"
+                                       Margin="10,0,0,0"
+                                       VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1"
+                                   Text="Flag as inappropriate"
+                                   FontSize="24"
+                                   Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   Foreground="Black"></TextBlock>
+
+                        <Image Source="/Assets/iconmonstr-arrow-28-icon.png"
+                               Stretch="Uniform"
+                               Grid.Column="2"
+                               Width="40"
+                               VerticalAlignment="Center"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

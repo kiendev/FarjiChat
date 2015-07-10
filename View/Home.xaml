@@ -1,0 +1,570 @@
+﻿<phone:PhoneApplicationPage x:Class="ChatRooms.View.Home"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:ignore="http://www.ignore.com"
+                            xmlns:telerikPrimitives="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Primitives"
+                            xmlns:converter="clr-namespace:ChatRooms.Converter"
+                            xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+                            xmlns:control="clr-namespace:ChatRooms.Control"
+                            xmlns:controls="clr-namespace:ImageTools.Controls;assembly=ImageTools.Controls"
+                            mc:Ignorable="d ignore"
+                            FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                            FontSize="{StaticResource PhoneFontSizeNormal}"
+                            Foreground="{StaticResource PhoneForegroundBrush}"
+                            SupportedOrientations="Portrait"
+                            Orientation="Portrait"
+                            shell:SystemTray.IsVisible="True"
+                            DataContext="{Binding Home, Source={StaticResource Locator}}">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <phone:PhoneApplicationPage.Resources>
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converter:NotBoolToVisibilityConverter x:Key="NotBoolToVisibilityConverter" />
+        <converter:ExtensitionToVisibilityConverter x:Key="ExtensitionToVisibilityConverter" />
+        <converter:NotExtensitionToVisibilityConverter x:Key="NotExtensitionToVisibilityConverter" />
+        <converter:SampleJetImageLoaderConverter x:Key="SampleJetImageLoaderConverter"/>
+        <controls:ImageConverter x:Key="ImageConverter" />
+    </phone:PhoneApplicationPage.Resources>
+
+    <Grid x:Name="Container">
+        <toolkit:GestureService.GestureListener>
+            <toolkit:GestureListener DragDelta="GestureListener_OnDragDelta" 
+                                     DragCompleted="GestureListener_OnDragCompleted"
+                                     DragStarted="GestureListener_OnDragStarted"
+                                     />
+        </toolkit:GestureService.GestureListener>
+
+        <control:Slideview x:Name="MenuNavigation" />
+
+        <Grid x:Name="LayoutRoot"
+              Background="{StaticResource BackgroundApp}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Projection>
+                <PlaneProjection/>
+            </Grid.Projection>
+
+            <control:AdsBanner Grid.Row="1" 
+                               Visibility="Visible" />
+
+            <!--TitlePanel contains the name of the application and page title-->
+            <Grid Grid.Row="0" Height="70" 
+                  VerticalAlignment="Top"
+                        Background="{StaticResource BackgroundTitle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Height="23"
+                        Style="{StaticResource ButtonNoMargin}"
+                        Click="ImgButtonMenu_OnClick"
+                        x:Name="ImgButtonMenu">
+                    <Button.Content>
+                        <Image Source="/Assets/ic_drawer.png" Stretch="Uniform"/>
+                    </Button.Content>
+                </Button>
+
+                <Image Source="/Assets/ic_launcher.png"
+                       Width="40"
+                       Height="40"
+                       Grid.Column="1"></Image>
+
+                <TextBlock Text="Home"
+                           x:Name="TxtTitle"
+                               Grid.Column="2"
+                               Foreground="Black"
+                               FontSize="25"
+                           Margin="10,0,0,0"
+                               VerticalAlignment="Center"
+                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                               HorizontalAlignment="Left"/>
+
+                <Grid Grid.Column="3" Visibility="{Binding IsRoomChat, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Width="50"
+                            Margin="10,0"
+                            Style="{StaticResource ButtonNoMargin}"
+                            Click="ImgButtonRefreshOnClick"
+                            x:Name="ImgButtonRefresh">
+                        <Button.Content>
+                            <Image Source="/Assets/ic_action_refresh.png" Stretch="Uniform"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Width="50"
+                            Margin="10,0"
+                            Grid.Column="1"
+                            Style="{StaticResource ButtonNoMargin}"
+                            Click="ImgButtonUserOnClick"
+                            x:Name="ImgButtonUser">
+                        <Button.Content>
+                            <Image Source="/Assets/ic_action_group.png" Stretch="Uniform"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Width="50"
+                            Margin="10,0"
+                            Grid.Column="2"
+                            Style="{StaticResource ButtonNoMargin}"
+                            Visibility="{Binding IsPrivateRoom, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Click="ImgQuitRoomOnClick"
+                            x:Name="ImgQuitRoom">
+                        <Button.Content>
+                            <Image Source="/Assets/ic_action_cancel.png" Stretch="Uniform"/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="0" Height="70" 
+                  Background="Black"
+                  x:Name="ExitGrid" 
+                  Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"  
+                           Margin="20,0,0,0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left">
+                    <Run Text="please "/>
+                    <Run Text="back " Foreground="#C00000"/>
+                    <Run Text="again to exit"/>
+                </TextBlock>
+
+                <Image Source="/Toolkit.Content/ApplicationBar.Cancel.png"
+                       Grid.Column="1"
+                       Tap="ExitTap"/>
+
+            </Grid>
+
+            <!--ContentPanel - place additional content here-->
+            <Grid x:Name="ContentPanel"
+                  Visibility="{Binding IsAbout, Converter={StaticResource NotBoolToVisibilityConverter}}"
+                  Background="{StaticResource BackgroundApp}"
+                  Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <telerikPrimitives:RadBusyIndicator AnimationStyle="AnimationStyle4"
+                                                    IsRunning="True"
+                                                    Grid.Row="1"
+                                                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                    Canvas.ZIndex="100"/>
+
+                <Grid Grid.Row="1" Width="480">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <phone:WebBrowser x:Name="DataBrower"
+                                      Opacity="0"
+                                      Canvas.ZIndex="100"
+                                      LoadCompleted="DataBrower_LoadCompleted" 
+                                      Navigating="DataBrower_Navigating" 
+                                      Navigated="DataBrower_Navigated" 
+                                      Style="{StaticResource WebBrowserStyle}"
+                                      IsScriptEnabled="True"
+                                      NavigationFailed="DataBrower_NavigationFailed" />
+                </Grid>
+
+                <Grid VerticalAlignment="Bottom" 
+                      Grid.Row="2"
+                      Visibility="{Binding IsRoomChat, Converter={StaticResource BoolToVisibilityConverter}}"
+                      x:Name="MessengerGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0"
+                                Grid.Row="0"
+                                Style="{StaticResource ButtonImage}"
+                                Click="ShowStickerClick"
+                                x:Name="BtnShowSticker">
+                            <Button.Content>
+                                <Image Source="/Assets/flatemoticons.png"
+                                       Stretch="Uniform"
+                                       Margin="7,0"
+                                       x:Name="ImgShowSticker"
+                                       Width="50"></Image>
+                            </Button.Content>
+                        </Button>
+
+                        <toolkit:PhoneTextBox Hint="{Binding Source={StaticResource LocalizedStrings}, Path=LocalizedResources.EnterMsg}"
+                                              Grid.Row="0"
+                                              Margin="-10,0"
+                                              Grid.Column="1"
+                                              Text="{Binding TextMsg, Mode=TwoWay}"
+                                              x:Name="TxtMessage" InputScope="Chat"/>
+
+                        <Button Content="Send" 
+                                Grid.Column="2"
+                                Grid.Row="0"
+                                Background="{Binding BindingColor}"
+                                Style="{StaticResource ButtonNoMargin}"
+                                Click="SendMsgClick"
+                                x:Name="BtnSendMsg"
+                                Width="120"></Button>
+                    </Grid>
+
+                    <Grid Grid.Row="1"
+                          Visibility="{Binding IsSticker, Converter={StaticResource BoolToVisibilityConverter}}"
+                          Height="250"
+                          Grid.Column="0" 
+                          Background="White">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <ListBox  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                  Height="70"
+                                  x:Name="LstGroupStickers"
+                                  ItemsSource="{Binding ListGroup}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal"
+                                                Tag="{Binding grurl}"
+                                                VerticalAlignment="Center"
+                                                x:Name="GroupStickerPanel"
+                                                Tap="GroupStickerTap">
+                                        
+                                        <Image Source="{Binding grimg}" 
+                                               Width="60"
+                                               Margin="5,0"
+                                               Stretch = "Uniform"/>
+                                        
+                                        <Border Height="70"
+                                                BorderThickness="0.3"
+                                                BorderBrush="LightGray"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <Border Width="480"
+                                Grid.Row="0"
+                                VerticalAlignment="Bottom"
+                                BorderThickness="0.3"
+                                BorderBrush="LightGray"/>
+                        
+                        <phone:LongListSelector x:Name="LstStickers"
+                                                Grid.Row="1"
+                                                Margin="0,10,0,0"
+                                                LayoutMode="Grid"
+                                                GridCellSize="115,100"
+                                                ItemsSource="{Binding ListSticker}">
+                            <phone:LongListSelector.ItemTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding url, Converter={StaticResource SampleJetImageLoaderConverter}}" 
+                                           Tap="StickerItemTap"
+                                           Tag="{Binding code}"
+                                           Stretch = "Uniform"
+                                           Width="115"
+                                           HorizontalAlignment="Left"
+                                           Margin="10,5,0,0"
+                                           Height="100"/>
+                                </DataTemplate>
+                            </phone:LongListSelector.ItemTemplate>
+                        </phone:LongListSelector>
+
+                        <telerikPrimitives:RadBusyIndicator AnimationStyle="AnimationStyle4"
+                                                IsRunning="True"
+                                                Visibility="{Binding IsLoadingSticker, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                Grid.Row="1"/>
+
+                    </Grid>
+                </Grid>
+
+            </Grid>
+
+
+            <Grid Grid.Row="2"
+                  Visibility="{Binding IsAbout, Converter={StaticResource BoolToVisibilityConverter}}">
+            <telerikPrimitives:RadBusyIndicator AnimationStyle="AnimationStyle4"
+                                                IsRunning="True"
+                                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                Canvas.ZIndex="100"/>
+            </Grid>
+
+            <ScrollViewer Grid.Row="2"
+                          x:Name="AboutGrid"
+                          Visibility="{Binding IsAbout, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <phone:LongListSelector x:Name="ListGroupSticker"
+                                            ItemsSource="{Binding ListGroup}"
+                                            Width="480"
+                                            Grid.Row="0"
+                                            Margin="0,0,-12,0"
+                                            Visibility="{Binding IsStickerItem, Converter={StaticResource NotBoolToVisibilityConverter}}">
+                                <phone:LongListSelector.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Background="White" 
+                                      Height="100" Tap="UIElement_OnTap"
+                                      Tag="{Binding grurl}"
+                                      Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <controls:AnimatedImage x:Name="Image" 
+                                                            Source="{Binding Path=grimg, Converter={StaticResource ImageConverter}}"
+                                                            Width="100"
+                                                             Stretch="Uniform"
+                                                            LoadingCompleted="Image_OnLoadingCompleted"
+                                                            LoadingFailed="Image_OnLoadingFailed"
+                                                            Margin="10,0,0,0"
+                                                            VerticalAlignment="Center" 
+                                                                    AnimationMode="Repeat"/>
+
+                                        <Image Width="100"
+                                               Grid.Column="0"
+                                               Stretch="Uniform"
+                                               Unloaded="ImgUnloaded"
+                                               Margin="10,0,0,0"
+                                               Visibility="{Binding grimg, Converter={StaticResource ExtensitionToVisibilityConverter}}"
+                                               VerticalAlignment="Center">
+                                            <Image.Source>
+                                                <BitmapImage DecodePixelWidth="100" 
+                                                             DecodePixelHeight="100" DecodePixelType="Logical"
+                                                             UriSource="{Binding grimg}" CreateOptions="BackgroundCreation">
+                                                </BitmapImage>
+                                            </Image.Source>
+                                        </Image>
+
+                                        <TextBlock Grid.Column="1"
+                                   Text="{Binding grname}"
+                                   Foreground="Black"
+                                   FontFamily="{StaticResource PhoneFontFamilyBold}"
+                                   FontSize="28"
+                                   Margin="30,0,0,0"
+                                   VerticalAlignment="Center"></TextBlock>
+
+                                            <Image Source="/Assets/next.png"
+                               Width="35"
+                               Grid.Column="2"
+                               Stretch="Uniform"
+                                           Margin="0,0,10,0"
+                               VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </phone:LongListSelector.ItemTemplate>
+                            </phone:LongListSelector>
+
+                        <phone:LongListSelector x:Name="ListStickers"
+                                                Width="480"
+                                                Grid.Row="0"
+                                                Height="630"
+                                                Margin="0,0,-12,0"
+                                                ItemRealized="ListStickers_OnItemRealized"
+                                                ItemsSource="{Binding ListSticker}"
+                                                Visibility="{Binding IsStickerItem, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <phone:LongListSelector.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Background="White"
+                                              Height="100"
+                                              Tag="{Binding code}"
+                                              Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                        <!--<Image Width="100"
+                                               x:Name="DefaultImage"
+                                               Grid.Column="0"
+                                               Tag="{Binding code}"
+                                               Tap="StickerTap"
+                                               Stretch="Uniform"
+                                               ImageFailed="JpgLoadFail"
+                                               Margin="10,0,0,0"
+                                               VerticalAlignment="Center"
+                                               Canvas.ZIndex="30"
+                                               Source="/Assets/ic_menu_emoticons.png">
+                                        </Image>-->
+
+                                        <controls:AnimatedImage x:Name="AnimeImage" 
+                                                                    Source="{Binding Path=url, Converter={StaticResource ImageConverter}}"
+                                                                    Width="100"
+                                                                Grid.Column="0"
+                                                                    Tap="StickerGifTap"
+                                                                    Tag="{Binding code}"
+                                                                Visibility="{Binding url, Converter={StaticResource NotExtensitionToVisibilityConverter}}"
+                                                                    Stretch="Uniform"
+                                                                    LoadingCompleted="Image_OnLoadingCompleted"
+                                                                Unloaded="AnimeImage_OnUnloaded"
+                                                                    LoadingFailed="Image_OnLoadingFailed"
+                                                                    Margin="10,0,0,0"
+                                                                    AnimationMode="Repeat"
+                                                                Canvas.ZIndex="20"
+                                                                    VerticalAlignment="Center"/>
+
+                                        <Image Width="100"
+                                               x:Name="StaticImage"
+                                               Grid.Column="0"
+                                               Tag="{Binding code}"
+                                               Visibility="{Binding url, Converter={StaticResource ExtensitionToVisibilityConverter}}"
+                                               Tap="StickerTap"
+                                               Stretch="Uniform"
+                                               Loaded="StaticImage_OnLoaded"
+                                               Unloaded="ImgUnloaded"
+                                               ImageFailed="JpgLoadFail"
+                                               Margin="10,0,0,0"
+                                               Canvas.ZIndex="10"
+                                               VerticalAlignment="Center"
+                                               Source="{Binding url}">
+                                        </Image>
+
+                                        <TextBox Grid.Column="1"
+                                             Text="{Binding code}"
+                                             Foreground="Black"
+                                             FontFamily="{StaticResource PhoneFontFamilyBold}"
+                                             FontSize="28"
+                                             Margin="30,0,10,0"
+                                             BorderBrush="{StaticResource PhoneAccentBrush}"
+                                             BorderThickness="1"
+                                             VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </phone:LongListSelector.ItemTemplate>
+                            </phone:LongListSelector>
+                    </Grid>
+
+                    <Grid Grid.Row="1"
+                          Margin="15,0"
+                          Visibility="{Binding IsStickerItem, Converter={StaticResource NotBoolToVisibilityConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Request Avatar"
+                               FontSize="30"
+                               FontWeight="Bold"
+                               Foreground="Black"></TextBlock>
+
+                        <TextBlock Text="You can request to have your own avatar image in Avatar/Stickers category, you just have to send a mail with the image you require and code for it. You avatar will be added within 7 working day."
+                               Margin="0,10"
+                               Grid.Row="1"
+                               Foreground="Black"
+                               TextWrapping="Wrap"></TextBlock>
+
+                        <HyperlinkButton Grid.Row="2"
+                                     Content="mail us"
+                                     Click="ButtonBase_OnClick"
+                                     Foreground="{StaticResource ForegroundHyperlink}"
+                                     HorizontalAlignment="Left"
+                                     Margin="-10,0,0,0"></HyperlinkButton>
+
+                        <Grid Background="White"
+                          Grid.Row="3"
+                          Height="100"
+                          Tap="FlagTap"
+                          Margin="0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Image Source="/Assets/flag.png"
+                                       Width="100"
+                                       Stretch="Uniform"
+                                       Margin="10,0,0,0"
+                                       VerticalAlignment="Center"/>
+
+                            <TextBlock Grid.Column="1"
+                                   Text="Flag as inappropriate"
+                                   FontSize="24"
+                                   Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   Foreground="Black"></TextBlock>
+
+                            <Image Source="/Assets/iconmonstr-arrow-28-icon.png"
+                               Stretch="Uniform"
+                               Grid.Column="2"
+                               Width="40"
+                               VerticalAlignment="Center"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </ScrollViewer>
+
+            <Grid Grid.Row="2" Background="#E53544"
+                  Visibility="{Binding IsNotInternet, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Image Source="/Assets/signal.png"
+                       Width="40"></Image>
+
+                    <TextBlock Text="Oops! please check your connetion, you are not connected!"
+                           Grid.Column="1"
+                           Foreground="White"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"
+                           Width="380"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="30"/>
+                </StackPanel>
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+
+</phone:PhoneApplicationPage>

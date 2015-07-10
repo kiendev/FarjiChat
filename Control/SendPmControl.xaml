@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="ChatRooms.Control.SendPmControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="800" d:DesignWidth="480">
+
+    <UserControl.Resources>
+        <Storyboard x:Name="FocusAnimation">
+            <DoubleAnimation Duration="0:0:0.2" To="-100" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="ChildControl" d:IsOptimized="True"/>
+        </Storyboard>
+
+        <Storyboard x:Name="LostFocusAnimation">
+            <DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="ChildControl" d:IsOptimized="True"/>
+        </Storyboard>
+        
+        <Storyboard x:Name="AnimationShow">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="LayoutRoot">
+                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Name="AnimationClose">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="LayoutRoot">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot">
+        <Grid Background="#58595b" 
+              Tap="BackgroundTap"
+              Opacity="0.5"/>
+
+        <StackPanel Margin="15,0" 
+            x:Name="ChildControl" 
+            Background="White" 
+            VerticalAlignment="Center">
+            <StackPanel.RenderTransform>
+                <CompositeTransform/>
+            </StackPanel.RenderTransform>
+            <StackPanel.Projection>
+                <PlaneProjection/>
+            </StackPanel.Projection>
+
+            <StackPanel x:Name="TitlePanel"
+                        Orientation="Horizontal">
+                <Image Source="/Assets/ic_menu_info_details.png"
+                       Height="50"
+                       Margin="5,0,0,0"></Image>
+
+                <TextBlock x:Name="TitleTextBlock"
+                           Text="Ký văn bản" 
+                           FontSize="25"
+                           Margin="15,15"
+                           Foreground="{StaticResource TextForeground}"/>
+            </StackPanel>
+
+            <Border BorderBrush="{StaticResource TextForeground}" BorderThickness="0.8"></Border>
+
+            <StackPanel Margin="15,15">
+                <TextBlock 
+                    x:Name="ContentTextBlock"
+                    Text="Enter message" 
+                    TextWrapping="Wrap"
+                    Foreground="Black"/>
+                
+                <TextBox x:Name="TxtMessage"
+                         Height="100"
+                         GotFocus="TxtMessage_OnGotFocus"
+                         LostFocus="TxtMessage_OnLostFocus"
+                         BorderBrush="#dfe0e0"
+                         InputScope="Chat"
+                         BorderThickness="0.7"
+                         Margin="-12,0,-12,-12"></TextBox>
+            </StackPanel>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="LeftButton"
+                        Content="No"
+                        Grid.Column="0"
+                        Style="{StaticResource ButtonNormal}"
+                        Padding="10" 
+                        Height="55"
+                        Click="LeftButton_OnClick"/>
+
+                <Border BorderBrush="#dfe0e0"
+                        Visibility="Visible"
+                        BorderThickness="0.6"
+                        Grid.Column="0"></Border>
+
+                <Button x:Name="RightButton"
+                        Content="Yes"
+                        Grid.Column="1"
+                        Style="{StaticResource ButtonNormal}"
+                        Padding="10" 
+                        Height="55"
+                        Click="RightButton_OnClick"/>
+
+                <Border BorderBrush="#dfe0e0"
+                        BorderThickness="0.6"
+                        Grid.Column="1"></Border>
+            </Grid>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,37 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="ChatRooms.View.About"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerikPrimitives="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Primitives"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundApp}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <telerikPrimitives:RadBusyIndicator AnimationStyle="AnimationStyle4"
+                                                    IsRunning="True"
+                                                    Grid.Row="0"
+                                            Visibility="Collapsed"
+                                            x:Name="LoadingIndicator"
+                                                    Canvas.ZIndex="100"/>
+
+        <phone:WebBrowser IsScriptEnabled="True"
+                          x:Name="AboutBrowser"
+                          Opacity="0"
+                          Navigating="DataBrower_Navigating"
+                          LoadCompleted="DataBrower_LoadCompleted" ></phone:WebBrowser>
+    </Grid>
+
+</phone:PhoneApplicationPage>

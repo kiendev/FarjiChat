@@ -1,0 +1,258 @@
+﻿<UserControl x:Class="ChatRooms.Control.Slideview"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:converter="clr-namespace:ChatRooms.Converter"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+             DataContext="{Binding Home, Source={StaticResource Locator}}">
+
+    <UserControl.Resources>
+        <converter:HomeSelectedConverter x:Key="HomeSelectedConverter" />
+        <converter:OnlineUserSelectedConverter x:Key="OnlineUserSelectedConverter" />
+        <converter:PrivateRoomSelectedConverter x:Key="PrivateRoomSelectedConverter" />
+        <converter:ChatRoomSelectedConverter x:Key="ChatRoomSelectedConverter" />
+        <converter:StickerSelectedConverter x:Key="StickerSelectedConverter" />
+        <converter:AboutSelectedConverter x:Key="AboutSelectedConverter" />
+        <converter:BlockedSelectedConverter x:Key="BlockedSelectedConverter" />
+        <converter:MemeSelectedConverter x:Key="MemeSelectedConverter" />
+        
+    </UserControl.Resources>
+    <Grid x:Name="SettingsPane"
+              Background="{StaticResource NavMenuBackground}"
+              Margin="-860,0,0,0"
+              Width="380">
+        <Grid.Projection>
+            <PlaneProjection/>
+        </Grid.Projection>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="{StaticResource BackgroundTitle}">
+            <StackPanel  Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Padding="12,0,0,0" 
+                           Text="{Binding Source={StaticResource LocalizedStrings}, Path=LocalizedResources.ApplicationTitle}" 
+                           Foreground="Black"
+                           FontSize="25"
+                           FontFamily="{StaticResource PhoneFontFamilySemiBold}" 
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="1" 
+                    x:Name="NavBarPanel" 
+                    VerticalAlignment="Top" 
+                    MinHeight="620" HorizontalAlignment="Left">
+
+            <Grid Background="{Binding SelectMenu, Converter={StaticResource HomeSelectedConverter}}" Width="380" 
+                  Tap="HomeTask">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_home.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+                
+                <TextBlock Text="Home"
+                           FontSize="22"
+                           Foreground="White"
+                           Grid.Column="1"
+                           Margin="10,20"/>
+            </Grid>
+
+            <Border BorderBrush="White" BorderThickness="0.6" Width="380"/>
+
+            <Grid Width="380" Tap="OnlineTask"
+                  Background="{Binding SelectMenu, Converter={StaticResource OnlineUserSelectedConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_friendslist.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+
+                <TextBlock Text="Online Users"
+                           FontSize="22"
+                           Grid.Column="1"
+                           Foreground="White"
+                           Margin="10,20"/>
+            </Grid>
+
+            <Border BorderBrush="White" BorderThickness="0.6" Width="380"/>
+
+            <Grid Width="380" Tap="PrivateRoomTask"
+                  Background="{Binding SelectMenu, Converter={StaticResource PrivateRoomSelectedConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_invite.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+
+                <TextBlock Text="Private Room"
+                           FontSize="22"
+                           Grid.Column="1"
+                           Foreground="White"
+                           Margin="10,20"/>
+            </Grid>
+
+            <Border BorderBrush="White" BorderThickness="0.6" Width="380"/>
+
+            <Grid Width="380" Tap="ChatRoomTask"
+                  Background="{Binding SelectMenu, Converter={StaticResource ChatRoomSelectedConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_start_conversation.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+
+                <TextBlock Text="Chat Room"
+                           FontSize="22"
+                           Foreground="White"
+                           Grid.Column="1"
+                           Margin="10,20"/>
+            </Grid>
+
+            <Border BorderBrush="White" BorderThickness="0.6" Width="380"/>
+
+            <Grid Width="380" Tap="StickerTap"
+                  Background="{Binding SelectMenu, Converter={StaticResource StickerSelectedConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_emoticons.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+
+                <TextBlock Text="Avatar/Sticker"
+                           FontSize="22"
+                           Grid.Column="1"
+                           Foreground="White"
+                           Margin="10,20"/>
+
+                <Grid Grid.Column="2" Background="#626262" 
+                      Height="30" Width="60" Margin="0,0,10,0">
+                    <TextBlock Text="1000+" 
+                               Foreground="White"
+                               HorizontalAlignment="Center"/>
+                </Grid>
+            </Grid>
+
+            <Border BorderBrush="White" BorderThickness="0.6" Width="380"/>
+
+            <Grid Width="380" Tap="BlockedTap"
+                  Background="{Binding SelectMenu, Converter={StaticResource BlockedSelectedConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_blocked_user.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+
+                <TextBlock Text="Blocked"
+                           FontSize="22"
+                           Grid.Column="1"
+                           Foreground="White"
+                           Margin="10,20"/>
+            </Grid>
+
+            <Border BorderBrush="White" BorderThickness="0.6" Width="380"/>
+
+            <Grid Width="380" Tap="MemeTap"
+                  Background="{Binding SelectMenu, Converter={StaticResource MemeSelectedConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_edit_2.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+
+                <TextBlock Text="Meme Generator"
+                           FontSize="22"
+                           Grid.Column="1"
+                           Foreground="White"
+                           Margin="10,20"/>
+            </Grid>
+
+            <Border BorderBrush="White" BorderThickness="0.6" Width="380"/>
+
+            <Grid Width="380" Tap="ShareTask">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_share.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+
+                <TextBlock Text="Share"
+                           FontSize="22"
+                           Foreground="White"
+                           Grid.Column="1"
+                           Margin="10,20"/>
+            </Grid>
+
+            <Border BorderBrush="White" BorderThickness="0.6" Width="380"/>
+
+            <Grid Width="380" Tap="AboutTask"
+                   Background="{Binding SelectMenu, Converter={StaticResource AboutSelectedConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_info_details.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+
+                <TextBlock Text="About"
+                           FontSize="22"
+                           Foreground="White"
+                           Grid.Column="1"
+                           Margin="10,20"/>
+            </Grid>
+
+            <Border BorderBrush="White" BorderThickness="0.6" Width="380"/>
+
+            <Grid Width="380" Tap="LogoutTap">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/Assets/ic_menu_end_conversation.png"
+                       Width="48"
+                       Margin="10,0"></Image>
+
+                <TextBlock Text="Logout"
+                           FontSize="22"
+                           Foreground="White"
+                           Grid.Column="1"
+                           Margin="10,20"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

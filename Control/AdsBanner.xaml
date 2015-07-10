@@ -1,0 +1,28 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:googleAds="clr-namespace:GoogleAds;assembly=GoogleAds"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone" x:Class="ChatRooms.Control.AdsBanner"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="80" d:DesignWidth="480">
+
+    <Grid x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
+        <Grid  Height="80" Width="480" VerticalAlignment="Top">
+            <googleAds:AdView AdUnitID="ca-app-pub-9908242075575541/8346433519"
+                          Format="Banner"
+                          VerticalAlignment="Bottom" />
+
+            <!--<Grid Background="Black" Width="30" Height="30" Margin="431,40,-31,-30">
+                <Image Source="/Toolkit.Content/ApplicationBar.Cancel.png"
+					Width="30"
+					Height="30"
+					Tap="UIElement_OnTap"/>
+            </Grid>-->
+        </Grid>
+    </Grid>
+</UserControl>
